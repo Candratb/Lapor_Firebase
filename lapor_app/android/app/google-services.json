@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "490754899998",
+    "project_id": "inventory-mobile-system",
+    "storage_bucket": "inventory-mobile-system.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490754899998:android:84005f8f1ace3cee536e0f",
+        "android_client_info": {
+          "package_name": "com.example.lapor_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMXZCkW8s2HhzcqfqYoPs1D9V_-RKZoGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
