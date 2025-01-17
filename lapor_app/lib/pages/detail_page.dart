@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lapor_book/components/komen_dialog.dart';
-import 'package:flutter_lapor_book/components/status_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:lapor_app/components/styles.dart';
 import 'package:lapor_app/models/akun.dart';
@@ -8,7 +6,7 @@ import 'package:lapor_app/models/laporan.dart';
 import 'package:url_launcher/url_launcher.dart';
 
   class DetailPage extends StatefulWidget {
-    DetailPage({super.key});
+    const DetailPage({super.key});
     @override
     State<StatefulWidget> createState() => _DetailPageState();
   }
