@@ -84,7 +84,7 @@ import 'package:lapor_app/models/akun.dart';
                       SizedBox(
                         height: 35,
                       ),
-                      Container(
+                      SizedBox(
                         width: double.infinity,
                         child: FilledButton(
                           style: buttonStyle,

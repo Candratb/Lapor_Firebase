@@ -12,6 +12,8 @@ import '../components/input_widget.dart';
 import '../components/validators.dart';
 
 class AddFormPage extends StatefulWidget {
+  const AddFormPage({super.key});
+
   @override
   State<StatefulWidget> createState() => AddFormState();
 }
@@ -188,8 +190,8 @@ class AddFormState extends State<AddFormPage> {
                             decoration: customInputDecoration('Instansi'),
                             items: dataInstansi.map((e) {
                               return DropdownMenuItem<String>(
-                                child: Text(e),
                                 value: e,
+                                child: Text(e),
                               );
                             }).toList(),
                             onChanged: (selected) {
@@ -212,7 +214,7 @@ class AddFormState extends State<AddFormPage> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        Container(
+                        SizedBox(
                           width: double.infinity,
                           child: FilledButton(
                             style: buttonStyle,

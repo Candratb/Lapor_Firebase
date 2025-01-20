@@ -5,6 +5,8 @@ import '../components/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   State<StatefulWidget> createState() => LoginPageState();
 }
@@ -95,7 +97,7 @@ void login() async {
                                             headerStyle(level: 3, dark: false)),
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
-                                        // login();
+                                         login();
                                       }
                                     }),
                               )

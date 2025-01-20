@@ -29,7 +29,7 @@ void initState() {
   if (user != null) {
     Future.delayed(Duration.zero, () {
     // buat dashboard terlebih dahulu, lalu hapus komen line code dibawah ini 
-    //  Navigator.pushReplacementNamed(context, '/dashboard');
+    Navigator.pushReplacementNamed(context, '/dashboard');
     });
   } else {
     Future.delayed(Duration.zero, () {

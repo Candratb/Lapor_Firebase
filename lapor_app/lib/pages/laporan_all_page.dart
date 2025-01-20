@@ -6,7 +6,7 @@ import 'package:lapor_app/models/laporan.dart';
 
 class AllLaporan extends StatefulWidget {
   final Akun akun;
-  AllLaporan({super.key, required this.akun});
+  const AllLaporan({super.key, required this.akun});
 
   @override
   State<AllLaporan> createState() => _AllLaporanState();

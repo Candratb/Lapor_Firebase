@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
   }
 
   class _DetailPageState extends State<DetailPage> {
-    bool _isLoading = false;
+    final bool _isLoading = false;
 
     Future launch(String uri) async {
       if (uri == '') return;
