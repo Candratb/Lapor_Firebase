@@ -22,10 +22,10 @@ class _MyLaporanState extends State<MyLaporan> {
   @override
   void initState() {
     super.initState();
-    getTransaksi(); 
+    getLaporan(); 
   }
 
-  void getTransaksi() async {
+  void getLaporan() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
           .collection('laporan')
@@ -33,35 +33,30 @@ class _MyLaporanState extends State<MyLaporan> {
           .get();
 
       setState(() {
-        listLaporan.clear();
-        for (var documents in querySnapshot.docs) {
-          List<dynamic>? komentarData = documents.data()['komentar'];
-
-          List<Komentar>? listKomentar = komentarData?.map((map) {
-            return Komentar(
-              nama: map['nama'],
-              isi: map['isi'],
-            );
-          }).toList();
-          listLaporan.add(
-            Laporan(
-              uid: documents.data()['uid'],
-              docId: documents.data()['docId'],
-              judul: documents.data()['judul'],
-              instansi: documents.data()['instansi'],
-              deskripsi: documents.data()['deskripsi'],
-              nama: documents.data()['nama'],
-              status: documents.data()['status'],
-              gambar: documents.data()['gambar'],
-              tanggal: documents['tanggal'].toDate(),
-              maps: documents.data()['maps'],
-              komentar: listKomentar,
-            ),
+        listLaporan = querySnapshot.docs.map((doc) {
+          final data = doc.data();
+          return Laporan(
+            uid: data['uid'] ?? '',
+            docId: doc.id,
+            judul: data['judul'] ?? '',
+            instansi: data['instansi'] ?? '',
+            deskripsi: data['deskripsi'],
+            gambar: data['gambar'],
+            nama: data['nama'] ?? '',
+            status: data['status'] ?? '',
+            tanggal: (data['tanggal'] as Timestamp).toDate(),
+            maps: data['maps'] ?? '',
+            komentar: (data['komentar'] as List<dynamic>?)?.map((komentar) {
+              return Komentar(
+                nama: komentar['nama'] ?? '',
+                isi: komentar['isi'] ?? '',
+              );
+            }).toList(),
           );
-        }
+        }).toList();
       });
     } catch (e) {
-      print(e);
+      print('Error: $e');
     }
   }
 
@@ -70,22 +65,27 @@ class _MyLaporanState extends State<MyLaporan> {
     return SafeArea(
       child: Container(
         width: double.infinity,
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1 / 1.234,
-            ),
-            itemCount: listLaporan.length,
-            itemBuilder: (context, index) {
-              return ListItem(
-                laporan: listLaporan[index],
-                akun: widget.akun,
-                isLaporanku: true,
-              );
-            }),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: listLaporan.isEmpty
+            ? const Center(
+                child: Text('Tidak ada laporan yang telah Anda unggah.'),
+              )
+            : GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 1 / 1.234,
+                ),
+                itemCount: listLaporan.length,
+                itemBuilder: (context, index) {
+                  return ListItem(
+                    laporan: listLaporan[index],
+                    akun: widget.akun,
+                    isLaporanku: true,
+                  );
+                },
+              ),
       ),
     );
   }

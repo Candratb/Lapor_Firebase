@@ -21,24 +21,59 @@ class _AllLaporanState extends State<AllLaporan> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-              width: double.infinity,
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 1 / 1.234,
-                  ),
-                  itemCount: listLaporan.length,
-                  itemBuilder: (context, index) {
-                    return ListItem(
-                      laporan: listLaporan[index],
-                      akun: widget.akun,
-                      isLaporanku: false,
-                    );
-                  }),
-            ),
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: StreamBuilder<QuerySnapshot>(
+          stream: _firestore.collection('laporan').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return const Center(child: Text('Tidak ada laporan.'));
+            }
+
+            listLaporan = snapshot.data!.docs.map<Laporan>((doc) {
+              final data = doc.data() as Map<String, dynamic>;
+              return Laporan(
+                uid: data['uid'] ?? '',
+                docId: doc.id,
+                judul: data['judul'] ?? '',
+                instansi: data['instansi'] ?? '',
+                deskripsi: data['deskripsi'],
+                gambar: data['gambar'],
+                nama: data['nama'] ?? '',
+                status: data['status'] ?? '',
+                tanggal: (data['tanggal'] as Timestamp).toDate(),
+                maps: data['maps'] ?? '',
+                komentar: (data['komentar'] as List<dynamic>?)?.map((komentar) {
+                  return Komentar(
+                    nama: komentar['nama'] ?? '',
+                    isi: komentar['isi'] ?? '',
+                  );
+                }).toList(),
+              );
+            }).toList();
+
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1 / 1.234,
+              ),
+              itemCount: listLaporan.length,
+              itemBuilder: (context, index) {
+                return ListItem(
+                  laporan: listLaporan[index],
+                  akun: widget.akun,
+                  isLaporanku: false,
+                );
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }

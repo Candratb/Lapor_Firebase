@@ -178,16 +178,16 @@ class AddFormState extends State<AddFormPage> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.photo_camera),
-                                  Text(' Foto Pendukung',
+                                  Icon(Icons.file_upload),
+                                  Text(' Upload File',
                                       style: headerStyle(level: 3)),
                                 ],
                               )),
                         ),
                         InputLayout(
-                          'Instansi',
+                          'Keperluan',
                           DropdownButtonFormField<String>(
-                            decoration: customInputDecoration('Instansi'),
+                            decoration: customInputDecoration('Keperluan'),
                             items: dataInstansi.map((e) {
                               return DropdownMenuItem<String>(
                                 value: e,
