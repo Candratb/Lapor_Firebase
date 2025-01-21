@@ -63,6 +63,24 @@ class AddFormState extends State<AddFormPage> {
     return await Geolocator.getCurrentPosition();
   }
   
+  Future<String> uploadImage() async {
+    if (file == null) return '';
+
+    String uniqueFilename = DateTime.now().millisecondsSinceEpoch.toString();
+
+    try {
+      Reference dirUpload =
+          _storage.ref().child('upload/${_auth.currentUser!.uid}');
+      Reference storedDir = dirUpload.child(uniqueFilename);
+
+      await storedDir.putFile(File(file!.path));
+
+      return await storedDir.getDownloadURL();
+    } catch (e) {
+      return '';
+    }
+  }
+
   Future<void> uploadDialog(BuildContext context) async {
     return showDialog(
       context: context,
@@ -96,41 +114,49 @@ class AddFormState extends State<AddFormPage> {
     );
   }
 
-  Future<void> addTransaksi(Akun akun) async {
-    setState(() {
-      _isLoading = true;
+  void addTransaksi(Akun akun) async {
+  setState(() {
+    _isLoading = true;
+  });
+  try {
+    CollectionReference laporanCollection = _firestore.collection('laporan');
+
+    // Convert DateTime to Firestore Timestamp
+    Timestamp timestamp = Timestamp.fromDate(DateTime.now());
+
+    String url = await uploadImage();
+
+    String currentLocation = await getCurrentLocation().then((value) {
+      return '${value.latitude},${value.longitude}';
     });
 
-    try {
-      String imageUrl = '';
-      if (file != null) {
-        File imageFile = File(file!.path);
-        TaskSnapshot snapshot = await _storage
-            .ref()
-            .child('laporan/${_auth.currentUser!.uid}/${file!.name}')
-            .putFile(imageFile);
-        imageUrl = await snapshot.ref.getDownloadURL();
-      }
+    String maps = 'https://www.google.com/maps/place/$currentLocation';
+    final id = laporanCollection.doc().id;
 
-      await _firestore.collection('laporan').add({
-        'uid': _auth.currentUser!.uid,
-        'judul': judul,
-        'instansi': instansi,
-        'deskripsi': deskripsi,
-        'gambar': imageUrl,
-        'tanggal': Timestamp.now(),
-      });
-
-      Navigator.of(context).pop();
-    } catch (e) {
-      final snackbar = SnackBar(content: Text(e.toString()));
-      ScaffoldMessenger.of(context).showSnackBar(snackbar);
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    await laporanCollection.doc(id).set({
+      'uid': _auth.currentUser!.uid,
+      'docId': id,
+      'judul': judul,
+      'instansi': instansi,
+      'deskripsi': deskripsi,
+      'gambar': url,
+      'nama': akun.nama,
+      'status': 'Posted',
+      'tanggal': timestamp,
+      'maps': maps,
+    }).catchError((e) {
+      throw e;
+    });
+    Navigator.popAndPushNamed(context, '/dashboard');
+  } catch (e) {
+    final snackbar = SnackBar(content: Text(e.toString()));
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  } finally {
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
 
   @override
   Widget build(BuildContext context) {

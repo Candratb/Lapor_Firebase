@@ -4,6 +4,7 @@ import 'package:lapor_app/components/list_item.dart';
 import 'package:lapor_app/models/akun.dart';
 import 'package:lapor_app/models/laporan.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lapor_app/pages/detail_page.dart'; // Import the DetailPage
 
 class MyLaporan extends StatefulWidget {
   final Akun akun;
@@ -22,7 +23,7 @@ class _MyLaporanState extends State<MyLaporan> {
   @override
   void initState() {
     super.initState();
-    getLaporan(); 
+    getLaporan();
   }
 
   void getLaporan() async {
@@ -68,7 +69,7 @@ class _MyLaporanState extends State<MyLaporan> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: listLaporan.isEmpty
             ? const Center(
-                child: Text('Tidak ada laporan yang telah Anda unggah.'),
+                child: Text('Belum ada laporan yang Anda unggah.'),
               )
             : GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -79,10 +80,28 @@ class _MyLaporanState extends State<MyLaporan> {
                 ),
                 itemCount: listLaporan.length,
                 itemBuilder: (context, index) {
-                  return ListItem(
-                    laporan: listLaporan[index],
-                    akun: widget.akun,
-                    isLaporanku: true,
+                  // Wrap the ListItem widget in a GestureDetector or InkWell
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigate to DetailPage and pass the laporan and akun
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailPage(),
+                          settings: RouteSettings(
+                            arguments: {
+                              'laporan': listLaporan[index],
+                              'akun': widget.akun,
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    child: ListItem(
+                      laporan: listLaporan[index],
+                      akun: widget.akun,
+                      isLaporanku: true,
+                    ),
                   );
                 },
               ),
