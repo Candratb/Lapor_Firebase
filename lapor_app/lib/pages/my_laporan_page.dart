@@ -80,10 +80,8 @@ class _MyLaporanState extends State<MyLaporan> {
                 ),
                 itemCount: listLaporan.length,
                 itemBuilder: (context, index) {
-                  // Wrap the ListItem widget in a GestureDetector or InkWell
                   return GestureDetector(
                     onTap: () {
-                      // Navigate to DetailPage and pass the laporan and akun
                       Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -68,7 +68,7 @@ void login() async {
                           key: _formKey,
                           child: Column(
                             children: [
-                              // tempat inputan nanti
+                              // inputan 
                               InputLayout(
                                   'Email',
                                   TextFormField(

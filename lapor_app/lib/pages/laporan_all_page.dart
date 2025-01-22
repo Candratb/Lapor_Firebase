@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lapor_app/components/list_item.dart';
 import 'package:lapor_app/models/akun.dart';
 import 'package:lapor_app/models/laporan.dart';
+import 'package:lapor_app/pages/detail_page.dart';  
 
 class AllLaporan extends StatefulWidget {
   final Akun akun;
@@ -64,10 +65,29 @@ class _AllLaporanState extends State<AllLaporan> {
               ),
               itemCount: listLaporan.length,
               itemBuilder: (context, index) {
-                return ListItem(
-                  laporan: listLaporan[index],
-                  akun: widget.akun,
-                  isLaporanku: false,
+                final laporan = listLaporan[index];
+
+                return GestureDetector(
+                  onTap: () {
+                    // Navigasi ke DetailPage dengan mengirimkan data laporan dan akun
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DetailPage(),
+                        settings: RouteSettings(
+                          arguments: {
+                            'laporan': laporan,
+                            'akun': widget.akun, 
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: ListItem(
+                    laporan: laporan,
+                    akun: widget.akun,
+                    isLaporanku: false,
+                  ),
                 );
               },
             );

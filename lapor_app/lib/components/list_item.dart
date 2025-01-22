@@ -45,7 +45,7 @@ class _ListItemState extends State<ListItem> {
       return Container(
         decoration: BoxDecoration(
             border: Border.all(width: 2),
-            borderRadius: BorderRadius.circular(20)),
+            borderRadius: BorderRadius.circular(10)),
         child: Column(
           children: [
             widget.laporan.gambar != ''
@@ -62,7 +62,7 @@ class _ListItemState extends State<ListItem> {
             Container(
               width: double.infinity,
               alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 6),
               decoration: const BoxDecoration(
                   border: Border.symmetric(horizontal: BorderSide(width: 2))),
               child: Text(

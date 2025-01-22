@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lapor_app/components/status_dialog.dart';
 import 'package:lapor_app/components/styles.dart';
 import 'package:lapor_app/models/akun.dart';
 import 'package:lapor_app/models/laporan.dart';
@@ -14,11 +15,24 @@ import 'package:url_launcher/url_launcher.dart';
   class _DetailPageState extends State<DetailPage> {
     final bool _isLoading = false;
 
+    String? status;
+
     Future launch(String uri) async {
       if (uri == '') return;
       if (!await launchUrl(Uri.parse(uri))) {
         throw Exception('Tidak dapat memanggil : $uri');
       }
+    }
+
+    void statusDialog(Laporan laporan) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatusDialog(
+            laporan: laporan,
+          );
+        },
+      );
     }
 
     @override
@@ -71,12 +85,32 @@ import 'package:url_launcher/url_launcher.dart';
                                         'Done', Colors.blue, Colors.white),
                             textStatus(
                                 laporan.instansi, Colors.white, Colors.black),
+                                if (akun.role == 'admin')
+                                SizedBox(
+                                  width: 250,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        status = laporan.status;
+                                      });
+                                      statusDialog(laporan);
+                                    },
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: primaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: Text('Ubah Status'),
+                                  ),
+                                ),
                           ],
                         ),
                         const SizedBox(height: 20),
                         ListTile(
                           leading: Icon(Icons.person),
-                          title: const Center(child: Text('Nama Pelapor')),
+                          title: const Center(child: Text('Nama Pengirim')),
                           subtitle: Center(
                             child: Text(laporan.nama),
                           ),
